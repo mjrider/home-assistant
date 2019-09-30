@@ -66,9 +66,11 @@ class EntityPlatform:
         if platform is None:
             self.parallel_updates = None
             self.parallel_updates_semaphore = None
+
             return
 
         self.parallel_updates = getattr(platform, "PARALLEL_UPDATES", None)
+
         # semaphore will be created on demand
         self.parallel_updates_semaphore = None
 

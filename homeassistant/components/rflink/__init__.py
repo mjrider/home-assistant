@@ -460,7 +460,6 @@ class RflinkCommand(RflinkDevice):
     async def _async_handle_command(self, command, *args):
         """Do bookkeeping for command, send it to rflink and update state."""
         self.cancel_queued_send_commands()
-
         if command == "turn_on":
             cmd = "on"
             self._state = True
