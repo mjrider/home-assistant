@@ -338,6 +338,33 @@ async def test_parallel_updates_sync_platform_with_constant(hass):
     assert entity.parallel_updates._value == 2
 
 
+async def test_parallel_requests_sync_platform_with_constant(hass):
+    """Test sync platform can set requests limit."""
+    platform = MockPlatform()
+    platform.PARALLEL_REQUESTS = 2
+
+    mock_entity_platform(hass, "test_domain.platform", platform)
+
+    component = EntityComponent(_LOGGER, DOMAIN, hass)
+    component._platforms = {}
+
+    await component.async_setup({DOMAIN: {"platform": "platform"}})
+
+    handle = list(component._platforms.values())[-1]
+    assert handle.parallel_requests == 2
+
+    class SyncEntity(MockEntity):
+        """Mock entity that has update."""
+
+        async def update(self):
+            pass
+
+    entity = SyncEntity()
+    await handle.async_add_entities([entity])
+    assert entity.parallel_requests is not None
+    assert entity.parallel_requests._value == 2
+
+
 async def test_raise_error_on_update(hass):
     """Test the add entity if they raise an error on update."""
     updates = []

@@ -111,6 +111,9 @@ class Entity:
     # Process updates in parallel
     parallel_updates: Optional[asyncio.Semaphore] = None
 
+    # Process requests in parallel
+    parallel_requests: Optional[asyncio.Semaphore] = None
+
     # Entry in the entity registry
     registry_entry: Optional[RegistryEntry] = None
 
