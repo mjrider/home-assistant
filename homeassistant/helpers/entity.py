@@ -557,13 +557,15 @@ class Entity:
     # call an requests
     async def async_request_call(self, request, params):
         # Process request batched
+
         if self.parallel_updates:
-            assert False
             await self.parallel_updates.acquire()
 
-        await request(**params)
-        if self.parallel_updates:
-            self.parallel_updates.release()
+        try:
+            await request(**params)
+        finally:
+            if self.parallel_updates:
+                self.parallel_updates.release()
 
 
 class ToggleEntity(Entity):
