@@ -111,6 +111,9 @@ class Entity:
     # Process updates in parallel
     parallel_updates: Optional[asyncio.Semaphore] = None
 
+    # Process updates in parallel
+    parallel_requests: Optional[asyncio.Semaphore] = None
+
     # Entry in the entity registry
     registry_entry: Optional[RegistryEntry] = None
 
@@ -555,14 +558,14 @@ class Entity:
     async def async_request_call(self, coro, *args, **kwargs):
         """Process request batched."""
 
-        if self.parallel_updates:
-            await self.parallel_updates.acquire()
+        if self.parallel_requests:
+            await self.parallel_requests.acquire()
 
         try:
             await coro(*args, **kwargs)
         finally:
-            if self.parallel_updates:
-                self.parallel_updates.release()
+            if self.parallel_requests:
+                self.parallel_requests.release()
 
 
 class ToggleEntity(Entity):
