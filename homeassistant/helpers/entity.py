@@ -556,7 +556,7 @@ class Entity:
 
     # call an requests
     async def async_request_call(self, coro, *args, **kwargs):
-        # Process request batched
+        """Process request batched."""
 
         if self.parallel_updates:
             await self.parallel_updates.acquire()
